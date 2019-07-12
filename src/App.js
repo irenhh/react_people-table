@@ -7,7 +7,7 @@ class App extends React.Component {
   state = {
     peopleList: [],
     peopleListToShow: [],
-    showPopup: false,
+    shownPopup: false,
     parents: {
       mother: '',
       father: '',
@@ -18,11 +18,13 @@ class App extends React.Component {
     fetch('./api/people.json')
       .then(response => response.json())
       .then((result) => {
-        const getChildren = (array, parent) => {
-          return array
-            .filter(child => child.father === parent.name || child.mother === parent.name)
-            .map(child => child.name);
-        };
+        const getChildren = (array, parent) => (
+          array
+            .filter(child => (
+              child.father === parent.name || child.mother === parent.name
+            ))
+            .map(child => child.name)
+        );
 
         const peopleList = result.map((item, index) => (
           {
@@ -43,42 +45,47 @@ class App extends React.Component {
   }
 
   filter = (event) => {
-    let updatedList = this.state.peopleList;
+    this.setState((prevState) => {
+      let updatedList = prevState.peopleList;
 
-    updatedList = updatedList.filter((item) => {
-      const dataToSort = item.name + item.father + item.mother;
+      updatedList = updatedList.filter((item) => {
+        const dataToSort = item.name + item.father + item.mother;
 
-      return dataToSort.toLowerCase().search(
-        event.target.value.toLowerCase()
-      ) !== -1;
+        return dataToSort.toLowerCase().search(
+          event.target.value.toLowerCase()
+        ) !== -1;
+      });
+
+      return { peopleListToShow: updatedList };
     });
-
-    this.setState({ peopleListToShow: updatedList });
   }
 
   sortBy = (target) => {
-    let sortedArray;
-    switch (target) {
-      case 'name': sortedArray = [...this.state.peopleList]
-        .sort((a, b) => a[target].localeCompare(b[target]));
-        break;
+    this.setState((prevState) => {
+      let sortedArray;
 
-      default: sortedArray = [...this.state.peopleList]
-        .sort((a, b) => a[target] - b[target]);
-    }
+      switch (target) {
+        case 'name':
+          sortedArray = [...prevState.peopleList]
+            .sort((a, b) => a[target].localeCompare(b[target]));
 
-    this.setState({ peopleListToShow: sortedArray });
+          break;
+
+        default: sortedArray = [...prevState.peopleList]
+          .sort((a, b) => a[target] - b[target]);
+      }
+
+      return { peopleListToShow: sortedArray };
+    });
   }
 
   markRow = (id) => {
     this.setState((prevState) => {
       const modifiedList = [...prevState.peopleListToShow]
-        .map((person) => {
-          return {
-            ...person,
-            marked: false,
-          };
-        })
+        .map(person => ({
+          ...person,
+          marked: false,
+        }))
         .map((person) => {
           if (person.id === id) {
             return {
@@ -117,26 +124,26 @@ class App extends React.Component {
       return {
         peopleList: [...prevState.peopleList, newPerson],
         peopleListToShow: [...prevState.peopleListToShow, newPerson],
-        showPopup: false,
+        shownPopup: false,
       };
     });
   }
 
   showNewPersonPopup = () => {
-    this.setState({ showPopup: true });
+    this.setState({ shownPopup: true });
   }
 
   closeNewPersonPopup =() => {
-    this.setState({ showPopup: false });
+    this.setState({ shownPopup: false });
   }
 
   addParent = (parent, event) => {
-    this.setState({
+    this.setState(prevState => ({
       parents: {
-        ...this.state.parents,
+        ...prevState.parents,
         [parent]: event.target.value,
       },
-    });
+    }));
   }
 
   render() {
@@ -158,7 +165,7 @@ class App extends React.Component {
           />
         </form>
 
-        {!this.state.showPopup && (
+        {!this.state.shownPopup && (
           <button
             type="button"
             className="adding-new-person"
@@ -168,7 +175,7 @@ class App extends React.Component {
           </button>
         )}
 
-        {this.state.showPopup && (
+        {this.state.shownPopup && (
           <div className="app-popup">
             <NewPerson
               people={this.state.peopleListToShow}

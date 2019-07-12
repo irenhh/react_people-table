@@ -1,41 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const classNames = require('classnames');
+
 function Person(props) {
   const { person, markRow } = props;
 
+  const tableRowClass = classNames({
+    person,
+    'person--female': person.sex === 'f',
+    'person--male': person.sex === 'm',
+    'person--mother': person.sex === 'f' && person.children.length > 0,
+    'person--father': person.sex === 'm' && person.children.length > 0,
+    [`person--lived-in-${person.century}`]: true,
+    'marked-row': person.marked,
+  });
+
+  const personNameCellStyles = {
+    textDecoration: person.born < 1650 && 'line-through',
+    fontWeight: person.died > 1800 && 'bold',
+  };
+
   return (
     <tr
-      className={`
-        person 
-        ${person.sex === 'f' ? 'person--female' : 'person--male'}
-        ${person.sex === 'f' && person.children.length > 0
-          ? 'person--mother'
-          : person.sex === 'm' && person.children.length > 0
-          ? 'person--father'
-          : null
-        }
-
-        person--lived-in-${person.century}
-        ${person.marked && 'marked-row'}
-      `}
-
-      style={
-        person.sex === 'f' ? { background: 'lightpink' } : null
-      }
-
+      className={tableRowClass}
+      style={{ background: person.sex === 'f' && 'lightpink' }}
       onClick={() => markRow(person.id)}
     >
       <td>{person.id}</td>
-      <td style={
-        person.born < 1650 
-        ? { textDecoration: 'line-through' } 
-        : person.died > 1800 
-        ? { fontWeight: 'bold' } 
-        : null
-      }>
+
+      <td style={personNameCellStyles}>
         {person.name}
       </td>
+
       <td>{person.sex}</td>
       <td>{person.born}</td>
       <td>{person.died}</td>
@@ -62,7 +59,7 @@ Person.propTypes = {
     marked: PropTypes.bool,
     id: PropTypes.number,
   }).isRequired,
-  
+
   markRow: PropTypes.func.isRequired,
 };
 
