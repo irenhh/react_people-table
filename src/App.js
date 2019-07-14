@@ -45,6 +45,8 @@ class App extends React.Component {
   }
 
   filter = (event) => {
+    const dataToFind = event.target.value;
+
     this.setState((prevState) => {
       let updatedList = prevState.peopleList;
 
@@ -52,7 +54,7 @@ class App extends React.Component {
         const dataToSort = item.name + item.father + item.mother;
 
         return dataToSort.toLowerCase().search(
-          event.target.value.toLowerCase()
+          dataToFind.toLowerCase()
         ) !== -1;
       });
 
