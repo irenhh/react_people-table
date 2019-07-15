@@ -67,7 +67,11 @@ class NewPerson extends React.Component {
           x
         </button>
 
-        <form onSubmit={submitNewPerson} className="popup-form">
+        <form
+          onSubmit={submitNewPerson}
+
+          className="popup-form">
+
           <div className={
             this.validateInput('currentName')
               ? `error-input--message`
@@ -115,8 +119,8 @@ class NewPerson extends React.Component {
           />
 
           <div className={
-            this.validateInput('currentDeathYear') 
-              ? `error-input--message` 
+            this.validateInput('currentDeathYear')
+              ? `error-input--message`
               : 'hidden-block'
           }>
             age must me between 0 and 150 years
@@ -132,7 +136,7 @@ class NewPerson extends React.Component {
                 ? `error-input--died error-input`
                 : ''
             }
-            
+
             onChange={event => this.addCurrentInput('currentDeathYear', event)}
             onBlur={() => this.handleBlur('died')}
           />
@@ -141,7 +145,7 @@ class NewPerson extends React.Component {
             <option value="" selected disabled hidden>Choose a father</option>
 
             {fathers.map(father => (
-              <option value={father.name} name="father">{father.name}</option>
+              <option value={father.name} name="father" key={father.id}>{father.name}</option>
             ))}
           </select>
 
@@ -149,7 +153,7 @@ class NewPerson extends React.Component {
             <option value="" selected disabled hidden>Choose a mother</option>
 
             {mothers.map(mother => (
-              <option value={mother.name} name="mother">{mother.name}</option>
+              <option value={mother.name} name="mother" key={mother.id}>{mother.name}</option>
             ))}
           </select>
 

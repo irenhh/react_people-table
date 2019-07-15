@@ -12,6 +12,7 @@ class App extends React.Component {
       mother: '',
       father: '',
     },
+    sortField: '',
   }
 
   componentDidMount = () => {
@@ -51,9 +52,9 @@ class App extends React.Component {
       let updatedList = prevState.peopleList;
 
       updatedList = updatedList.filter((item) => {
-        const dataToSort = item.name + item.father + item.mother;
+        const dataToFilter = item.name + item.father + item.mother;
 
-        return dataToSort.toLowerCase().search(
+        return dataToFilter.toLowerCase().search(
           dataToFind.toLowerCase()
         ) !== -1;
       });
@@ -77,7 +78,11 @@ class App extends React.Component {
           .sort((a, b) => a[target] - b[target]);
       }
 
-      return { peopleListToShow: sortedArray };
+      if (prevState.sortField === target) {
+        return { peopleListToShow: [...prevState.peopleListToShow.reverse()] };
+      }
+
+      return { peopleListToShow: sortedArray, sortField: target };
     });
   }
 
@@ -117,10 +122,21 @@ class App extends React.Component {
     newPerson = {
       ...newPerson,
       id: this.state.peopleListToShow.length + 1,
+      age: newPerson.died - newPerson.born,
+      century: Math.ceil(newPerson.died / 100),
       children: [],
       mother: this.state.parents.mother,
       father: this.state.parents.father,
     };
+
+    if (
+      newPerson.age < 0
+      || newPerson.age > 150
+      || /\d|\W/.test(newPerson.name.replace(' ', ''))
+    ) {
+
+      return false;
+    }
 
     this.setState((prevState) => {
       return {
@@ -140,10 +156,12 @@ class App extends React.Component {
   }
 
   addParent = (parent, event) => {
+    const currentParent = event.target.value;
+
     this.setState(prevState => ({
       parents: {
         ...prevState.parents,
-        [parent]: event.target.value,
+        [parent]: currentParent,
       },
     }));
   }
