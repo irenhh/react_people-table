@@ -55,10 +55,13 @@ class NewPerson extends React.Component {
     const initialMothers = getParentList(people, 'f');
     const initialFathers = getParentList(people, 'm');
 
-    const mothers = initialMothers.length < 1 ? [{ name: 'unknown', id: Date.now() }] : initialMothers;
-    const fathers = initialFathers.length < 1 ? [{ name: 'unknown', id: Date.now() }] : initialFathers;
+    const mothers = initialMothers.length < 1
+      ? [{ name: 'unknown', id: Date.now() }]
+      : initialMothers;
 
-
+    const fathers = initialFathers.length < 1
+      ? [{ name: 'unknown', id: Date.now() }]
+      : initialFathers;
 
     return (
       <div className="popup-add-new-person">
