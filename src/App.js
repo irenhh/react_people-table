@@ -132,7 +132,7 @@ class App extends React.Component {
     if (
       newPerson.age < 0
       || newPerson.age > 150
-      || /\d|\W/.test(newPerson.name.replace(' ', ''))
+      || /\d|\W/.test(newPerson.name.replace(/\s/g, ''))
     ) {
 
       return false;

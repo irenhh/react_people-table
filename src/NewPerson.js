@@ -77,8 +77,8 @@ class NewPerson extends React.Component {
 
         <form
           onSubmit={submitNewPerson}
-
-          className="popup-form">
+          className="popup-form"
+        >
 
           <div className={
             this.validateInput('currentName')
