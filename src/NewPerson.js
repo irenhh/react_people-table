@@ -29,7 +29,7 @@ class NewPerson extends React.Component {
   validateInput = (input) => {
     switch (input) {
       case 'currentName':
-        return /\d|\W/.test(this.state.currentName.replace(' ', ''));
+        return /\d|\W/.test(this.state.currentName.replace(/\s/g, ''));
 
       case 'currentDeathYear':
         return (this.state.currentDeathYear - this.state.currentBirthYear) < 0
@@ -52,8 +52,13 @@ class NewPerson extends React.Component {
         .filter(person => person.born < this.state.currentBirthYear && person.sex === gender);
     };
 
-    const mothers = getParentList(people, 'f');
-    const fathers = getParentList(people, 'm');
+    const initialMothers = getParentList(people, 'f');
+    const initialFathers = getParentList(people, 'm');
+
+    const mothers = initialMothers.length < 1 ? [{ name: 'unknown', id: Date.now() }] : initialMothers;
+    const fathers = initialFathers.length < 1 ? [{ name: 'unknown', id: Date.now() }] : initialFathers;
+
+
 
     return (
       <div className="popup-add-new-person">
