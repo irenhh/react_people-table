@@ -43,7 +43,7 @@ class NewPerson extends React.Component {
     const {
       submitNewPerson,
       people,
-      closeNewPersonPopup,
+      toggleNewPersonPopup,
       addParent,
     } = this.props;
 
@@ -70,7 +70,7 @@ class NewPerson extends React.Component {
         <button
           type="button"
           className="popup-close"
-          onClick={closeNewPersonPopup}
+          onClick={toggleNewPersonPopup}
         >
           x
         </button>
@@ -126,11 +126,13 @@ class NewPerson extends React.Component {
             onChange={event => this.addCurrentInput('currentBirthYear', event)}
           />
 
-          <div className={
-            this.validateInput('currentDeathYear')
-              ? `error-input--message`
-              : 'hidden-block'
-          }>
+          <div
+            className={
+              this.validateInput('currentDeathYear')
+                ? `error-input--message`
+                : 'hidden-block'
+            }
+          >
             age must me between 0 and 150 years
           </div>
 
@@ -153,7 +155,13 @@ class NewPerson extends React.Component {
             <option value="" selected disabled hidden>Choose a father</option>
 
             {fathers.map(father => (
-              <option value={father.name} name="father" key={father.id}>{father.name}</option>
+              <option
+                value={father.name}
+                name="father"
+                key={father.id}
+              >
+                {father.name}
+              </option>
             ))}
           </select>
 
@@ -161,7 +169,13 @@ class NewPerson extends React.Component {
             <option value="" selected disabled hidden>Choose a mother</option>
 
             {mothers.map(mother => (
-              <option value={mother.name} name="mother" key={mother.id}>{mother.name}</option>
+              <option
+                value={mother.name}
+                name="mother"
+                key={mother.id}
+              >
+                {mother.name}
+              </option>
             ))}
           </select>
 
@@ -177,7 +191,7 @@ class NewPerson extends React.Component {
 NewPerson.propTypes = {
   submitNewPerson: PropTypes.func.isRequired,
   people: PropTypes.arrayOf(PropTypes.object).isRequired,
-  closeNewPersonPopup: PropTypes.func.isRequired,
+  toggleNewPersonPopup: PropTypes.func.isRequired,
   addParent: PropTypes.func.isRequired,
 };
 

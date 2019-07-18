@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-const classNames = require('classnames');
+import classNames from 'classnames';
 
 function Person(props) {
-  const { person, markRow } = props;
+  const { person, markRow, columnNames } = props;
 
   const tableRowClass = classNames({
     person,
@@ -27,20 +26,14 @@ function Person(props) {
       style={{ background: person.sex === 'f' && 'lightpink' }}
       onClick={() => markRow(person.id)}
     >
-      <td>{person.id}</td>
-
-      <td style={personNameCellStyles}>
-        {person.name}
-      </td>
-
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
-      <td>{person.father}</td>
-      <td>{person.mother}</td>
-      <td>{person.age}</td>
-      <td>{person.century}</td>
-      <td>{person.children.join(', ')}</td>
+      {columnNames.map(column => (
+        <td
+          className={column === 'name' ? personNameCellStyles : null}
+          key={column}
+        >
+          {column === 'children' ? person[column].join(', ') : person[column]}
+        </td>
+      ))}
     </tr>
   );
 }
@@ -61,6 +54,7 @@ Person.propTypes = {
   }).isRequired,
 
   markRow: PropTypes.func.isRequired,
+  columnNames: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default Person;

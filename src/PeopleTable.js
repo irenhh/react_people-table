@@ -34,6 +34,7 @@ function PeopleTable(props) {
             key={person.id}
             person={person}
             markRow={markRow}
+            columnNames={columnNames}
           />
         ))}
       </tbody>

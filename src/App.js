@@ -46,16 +46,14 @@ class App extends React.Component {
   }
 
   filter = (event) => {
-    const dataToFind = event.target.value;
+    const dataToFind = (event.target.value).toLowerCase();
 
     this.setState((prevState) => {
-      let updatedList = prevState.peopleList;
-
-      updatedList = updatedList.filter((item) => {
+      const updatedList = prevState.peopleList.filter((item) => {
         const dataToFilter = item.name + item.father + item.mother;
 
         return dataToFilter.toLowerCase().search(
-          dataToFind.toLowerCase()
+          dataToFind
         ) !== -1;
       });
 
@@ -91,18 +89,8 @@ class App extends React.Component {
       const modifiedList = [...prevState.peopleListToShow]
         .map(person => ({
           ...person,
-          marked: false,
-        }))
-        .map((person) => {
-          if (person.id === id) {
-            return {
-              ...person,
-              marked: true,
-            };
-          }
-
-          return person;
-        });
+          marked: person.id === id,
+        }));
 
       return {
         peopleListToShow: modifiedList,
@@ -127,6 +115,7 @@ class App extends React.Component {
       children: [],
       mother: this.state.parents.mother,
       father: this.state.parents.father,
+      marked: false,
     };
 
     if (
@@ -134,7 +123,6 @@ class App extends React.Component {
       || newPerson.age > 150
       || /\d|\W/.test(newPerson.name.replace(/\s/g, ''))
     ) {
-
       return false;
     }
 
@@ -147,12 +135,8 @@ class App extends React.Component {
     });
   }
 
-  showNewPersonPopup = () => {
-    this.setState({ shownPopup: true });
-  }
-
-  closeNewPersonPopup =() => {
-    this.setState({ shownPopup: false });
+  toggleNewPersonPopup = () => {
+    this.setState(prevState => ({ shownPopup: !prevState.shownPopup }));
   }
 
   addParent = (parent, event) => {
@@ -189,7 +173,7 @@ class App extends React.Component {
           <button
             type="button"
             className="adding-new-person"
-            onClick={this.showNewPersonPopup}
+            onClick={this.toggleNewPersonPopup}
           >
             Add a new person
           </button>
@@ -204,7 +188,7 @@ class App extends React.Component {
               handleOptionChange={this.handleOptionChange}
               addBirthYear={this.addBirthYear}
               addDeathYear={this.addDeathYear}
-              closeNewPersonPopup={this.closeNewPersonPopup}
+              toggleNewPersonPopup={this.toggleNewPersonPopup}
               addParent={this.addParent}
             />
           </div>
